@@ -1,6 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using TMPro;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -9,14 +10,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     [Space] public Transform[] spawnPoints;
     [Space] public GameObject roomCam;
-    [Space] public GameObject nameUI;
     [Space] public GameObject connUI;
 
-    private new string name = "";
+    [SerializeField] private TextMeshProUGUI nameText;
+
+    public new string name = "";
     [HideInInspector] public int kills = 0;
     [HideInInspector] public int deaths = 0;
 
-    public string roomNameToJoin = "test";
+    [HideInInspector] public string roomNameToJoin = "?";
 
     private void Awake() {
         instance = this;
@@ -24,12 +26,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void ChangeName(string _name) {
         name = _name;
+        nameText.text = name;
     }
 
     public void JoinRoomButtonPressed() {
-        Debug.Log("Connecting...");
-
-        nameUI.SetActive(false);
         connUI.SetActive(true);
 
         PhotonNetwork.JoinOrCreateRoom(roomNameToJoin, null, null);
@@ -37,8 +37,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom() {
         base.OnJoinedRoom();
-
-        Debug.Log("Connected to a room");
 
         roomCam.SetActive(false);
 
@@ -52,6 +50,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         _player.GetComponent<PlayerSetup>().IsLocalPlayer();
         _player.GetComponent<Health>().isLocalPlayer = true;
         _player.GetComponent<PhotonView>().RPC("SetName", RpcTarget.AllBuffered, name);
+        _player.GetComponent<PhotonView>().RPC("SetMaterial", RpcTarget.AllBuffered, _player.GetComponent<PhotonView>().Owner.ActorNumber - 1);
         PhotonNetwork.LocalPlayer.NickName = name;
     }
 

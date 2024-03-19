@@ -41,7 +41,7 @@ public class RoomList : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
-    public void ChangeRoomToCreateName(string _roomName) {
+    public void ChangeRoomName(string _roomName) {
         roomManager.roomNameToJoin = _roomName;
     }
 
@@ -85,6 +85,7 @@ public class RoomList : MonoBehaviourPunCallbacks
     public void JoinRoomByName(string _name) {
         roomManager.roomNameToJoin = _name;
         roomManagerGameObject.SetActive(true);
+        RoomManager.instance.JoinRoomButtonPressed();
         gameObject.SetActive(false);
     }
 }

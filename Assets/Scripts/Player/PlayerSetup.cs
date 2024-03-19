@@ -5,15 +5,16 @@ using TMPro;
 public class PlayerSetup : MonoBehaviour
 {
     [SerializeField] private PlayerMovement movement;
-    [SerializeField] private GameObject camera;
+    [SerializeField] private new GameObject camera;
     [SerializeField] private new string name;
     [SerializeField] private TextMeshPro nameText;
     [SerializeField] private GameObject canvas;
+    [SerializeField] private Material[] materials;
 
     public void IsLocalPlayer() {
         movement.enabled = true;
-        camera.SetActive(true);
         canvas.SetActive(true);
+        camera.SetActive(true);
         nameText.enabled = false;
     }
 
@@ -23,4 +24,12 @@ public class PlayerSetup : MonoBehaviour
         nameText.text = name;
     }
 
+    [PunRPC]
+    public void SetMaterial(int index) {
+        Renderer renderer = GetComponent<Renderer>();
+        index = Mathf.Clamp(index, 0, materials.Length - 1);
+        renderer.material = materials[index];
+    }
+
 }
+  

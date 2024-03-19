@@ -11,6 +11,7 @@ public class Health : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private Image healthBar;
+    [SerializeField] private Animator hitAnim;
 
     [Header("VFX")]
     [SerializeField] private GameObject deathVFX;
@@ -19,6 +20,7 @@ public class Health : MonoBehaviour
     public void TakeDamage(float damage) {
         if (isInvincible == false) {
             isInvincible = true;
+            hitAnim.SetTrigger("hitTrigger");
             health -= damage;
             healthBar.fillAmount = health / 100f;
 
