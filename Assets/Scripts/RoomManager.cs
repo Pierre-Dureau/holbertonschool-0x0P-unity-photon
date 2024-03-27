@@ -2,6 +2,8 @@ using UnityEngine;
 using Photon.Pun;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using TMPro;
+using Photon.Realtime;
+using System.Collections.Generic;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -11,6 +13,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [Space] public Transform[] spawnPoints;
     [Space] public GameObject roomCam;
     [Space] public GameObject connUI;
+    [Space] public GameObject LobbyUI;
 
     [SerializeField] private TextMeshProUGUI nameText;
 
@@ -18,7 +21,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [HideInInspector] public int kills = 0;
     [HideInInspector] public int deaths = 0;
 
-    [HideInInspector] public string roomNameToJoin = "?";
+    [HideInInspector] public string roomNameToJoin;
 
     private void Awake() {
         instance = this;
@@ -29,10 +32,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
         nameText.text = name;
     }
 
+    public void CreateRoomButtonPressed() {
+        connUI.SetActive(true);
+
+        PhotonNetwork.CreateRoom(roomNameToJoin + "_" + UnityEngine.Random.Range(1000, 9999), new RoomOptions { MaxPlayers = 4 }, null);
+    }
+
     public void JoinRoomButtonPressed() {
         connUI.SetActive(true);
 
-        PhotonNetwork.JoinOrCreateRoom(roomNameToJoin, null, null);
+        PhotonNetwork.JoinRoom(roomNameToJoin);
     }
 
     public override void OnJoinedRoom() {
@@ -41,6 +50,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
         roomCam.SetActive(false);
 
         SpawnPlayer();
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message) {
+        connUI.SetActive(false);
+        LobbyUI.SetActive(true);
+        gameObject.SetActive(false);
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer) {
+        if (otherPlayer.IsLocal) {
+            PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.LocalPlayer);
+        }
     }
 
     public void SpawnPlayer() {

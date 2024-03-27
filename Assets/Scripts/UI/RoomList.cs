@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using static UnityEngine.UI.Image;
 
 public class RoomList : MonoBehaviourPunCallbacks
 {
@@ -75,7 +76,7 @@ public class RoomList : MonoBehaviourPunCallbacks
         foreach (var room in cachedRoomList) {
             GameObject roomItem = Instantiate(roomListItemPrefab, roomListParent);
 
-            roomItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = room.Name;
+            roomItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = room.Name.Substring(0, room.Name.Length - 5); ;
             roomItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = room.PlayerCount + "/4";
 
             roomItem.GetComponent<RoomItemButton>().roomName = room.Name;

@@ -30,9 +30,9 @@ public class Health : MonoBehaviour
                     RoomManager.instance.deaths++;
                     RoomManager.instance.SetHashes();
                     RoomManager.instance.SpawnPlayer();
+                    PhotonNetwork.Destroy(gameObject);
                 }
                     
-                Destroy(gameObject);
             } else
                 StartCoroutine(Invincibility());
         }

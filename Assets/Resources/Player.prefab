@@ -1579,7 +1579,7 @@ MonoBehaviour:
   camera: {fileID: 5844399872187601219}
   bullet: {fileID: 8439916900705387172, guid: 360ec6c36e3dee34dbd9727a27dfb6b3, type: 3}
   fireRate: 1
-  bulletSpeed: 7
+  bulletSpeed: 20
   reloadSLider: {fileID: 7874023950571235990}
 --- !u!114 &1762207988904752663
 MonoBehaviour:

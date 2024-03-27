@@ -8,7 +8,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private GameObject bullet;
 
     public float fireRate = 1f;
-    public float bulletSpeed = 7f;
+    public float bulletSpeed = 20f;
     private float nextFire = 0f;
 
     private int ammo = 5;
@@ -39,10 +39,9 @@ public class Weapon : MonoBehaviour
     private void Fire() {
         Vector3 camForward = camera.transform.forward;
         GameObject newBullet = PhotonNetwork.Instantiate(bullet.name, camera.transform.position + camForward, Quaternion.identity);
+        newBullet.GetComponent<Bullet>().SetPlayerWhoShotID(PhotonNetwork.LocalPlayer.ActorNumber);
 
         if (newBullet.TryGetComponent<Rigidbody>(out var bulletRigidbody))
             bulletRigidbody.velocity = camForward * bulletSpeed;
-
-        Destroy(newBullet, 4f);
     }
 }
